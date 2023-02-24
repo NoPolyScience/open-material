@@ -13,14 +13,19 @@ import (
 	"github.com/tyler-smith/go-bip39"
 )
 
+//type Wallet struct {
+//	PrivateKey ecdsa.PrivateKey
+//	Address    common.Address
+//}
+
 type Wallet struct {
-	PrivateKey ecdsa.PrivateKey
+	PrivateKey string
 	Address    common.Address
 }
 
-func NewWallet() Wallet {
+func NewWallet() *Wallet {
 	priv, address := GenerateAddress()
-	return Wallet{PrivateKey: *priv, Address: address}
+	return &Wallet{PrivateKey: KeyToString(priv), Address: address}
 }
 
 // GenerateAddress generates a new private key and returns the address.
