@@ -36,6 +36,11 @@ func GenerateAddress() (*ecdsa.PrivateKey, common.Address) {
 	return priv, address
 }
 
+func ToECDSA(privKey string) (*ecdsa.PrivateKey, error) {
+	key, err := ethcrypto.HexToECDSA(privKey)
+	return key, err
+}
+
 // GeneratePrivKey generates a new private key.
 func GeneratePrivKey() (*ecdsa.PrivateKey, error) {
 	key, err := ecdsa.GenerateKey(secp256k1.S256(), rand.Reader)
