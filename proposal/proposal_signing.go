@@ -46,3 +46,7 @@ func decodeSignature(sig []byte) (r, s, v *big.Int) {
 	v = new(big.Int).SetBytes([]byte{sig[64] + 27})
 	return r, s, v
 }
+
+func encodeSignature(r, s, v *big.Int) []byte {
+	return append(append(r.Bytes(), s.Bytes()...), byte(v.Uint64()-27))
+}
