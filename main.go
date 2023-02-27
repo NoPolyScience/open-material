@@ -29,7 +29,7 @@ func main() {
 	fmt.Println(*walletFromKeyStore)
 	proposalWithoutSig := proposal.Proposal{
 		Nonce:        1,
-		From:         &walletFromKeyStore.Address,
+		Proposer:     &walletFromKeyStore.Address,
 		Title:        "Test",
 		Pos:          new(big.Int).SetInt64(1),
 		Height:       new(big.Int).SetInt64(12),

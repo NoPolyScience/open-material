@@ -12,7 +12,7 @@ import (
 
 type Proposal struct {
 	Nonce        uint64          //1
-	From         *common.Address //0x2ab0e13bff7f2c07fe4f2c4c28db4a792c83834b - UNAM Address
+	Proposer     *common.Address //0x2ab0e13bff7f2c07fe4f2c4c28db4a792c83834b - UNAM Address
 	Title        string          //Changing the value of copper diselenide from 1.0 to 1.1
 	Pos          *big.Int        //1.1
 	Height       *big.Int        //-
