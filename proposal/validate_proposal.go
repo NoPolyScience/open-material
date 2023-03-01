@@ -16,7 +16,6 @@ func Ecrecover(hash, sig []byte) ([]byte, error) {
 }
 
 func EcrecoverProposal(hash *common.Hash, pS *ProposalWithSignature) ([]byte, error) {
-	//hash := rlpHash(pS.Proposal)
 
 	r := pS.R
 	s := pS.S
@@ -35,6 +34,7 @@ func EcrecoverProposal(hash *common.Hash, pS *ProposalWithSignature) ([]byte, er
 func ValidateProposal(pS *ProposalWithSignature) (bool, error) {
 	hash := rlpHash(pS.Proposal)
 	rec, err := EcrecoverProposal(&hash, pS)
+	proposer := pS.Proposal.Proposer
 
 	if err != nil {
 		return false, err
@@ -42,6 +42,13 @@ func ValidateProposal(pS *ProposalWithSignature) (bool, error) {
 
 	x, y := elliptic.Unmarshal(crypto.S256(), rec)
 	pub := &ecdsa.PublicKey{Curve: crypto.S256(), X: x, Y: y}
+	recoveredProposer := crypto.PubkeyToAddress(*pub)
+
+	//validate proposer
+	if recoveredProposer != *proposer {
+		return false, nil
+	}
+
 	compressed := crypto.CompressPubkey(pub)
 
 	encodedSig := encodeSignature(pS.R, pS.S, pS.V)
