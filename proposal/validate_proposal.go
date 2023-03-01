@@ -42,9 +42,11 @@ func ValidateProposal(pS *ProposalWithSignature) (bool, error) {
 
 	x, y := elliptic.Unmarshal(crypto.S256(), rec)
 	pub := &ecdsa.PublicKey{Curve: crypto.S256(), X: x, Y: y}
-	compressed := secp256k1.CompressPubkey(pub.X, pub.Y)
-	encodedSig := encodeSignature(pS.R, pS.S, pS.V)
+	compressed := crypto.CompressPubkey(pub)
 
-	result := secp256k1.VerifySignature(compressed, hash[:], encodedSig)
+	encodedSig := encodeSignature(pS.R, pS.S, pS.V)
+	encodedSigNoRecover := encodedSig[:len(encodedSig)-1] // remove recovery byte
+
+	result := secp256k1.VerifySignature(compressed, hash[:], encodedSigNoRecover)
 	return result, nil
 }

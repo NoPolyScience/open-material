@@ -6,6 +6,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
@@ -25,6 +26,7 @@ type Wallet struct {
 
 func NewWallet() *Wallet {
 	priv, address := GenerateAddress()
+	fmt.Println("Public key: ", priv.PublicKey)
 	return &Wallet{PrivateKey: KeyToString(priv), Address: address}
 }
 

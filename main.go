@@ -9,24 +9,18 @@ import (
 )
 
 func main() {
-	//wallet := crypto.NewWallet()
-	//fmt.Println(*wallet)
-	//fmt.Println(*wallet)
-
-	//fmt.Println("Private Key: ", string(wallet.PrivateKey))
-	//fmt.Println("D: ", wallet.PrivateKey.D)
-	//fmt.Println("X: ", wallet.PrivateKey.X)
-	//fmt.Println("Y: ", wallet.PrivateKey.Y)
-	//fmt.Println("Public Key: ", wallet.PrivateKey.PublicKey)
+	wallet := crypto.NewWallet()
+	fmt.Println(*wallet)
 
 	//fmt.Println(crypto.KeyStoreDirExists())
 
 	if !crypto.KeyStoreDirExists() {
 		crypto.CreateKeyStoreDir()
 	}
-	//crypto.CreateKeyStoreFile(wallet)
+	crypto.CreateKeyStoreFile(wallet)
 	walletFromKeyStore, _ := crypto.ReadFromKeyStoreFile()
 	fmt.Println(*walletFromKeyStore)
+
 	proposalWithoutSig := proposal.Proposal{
 		Nonce:        1,
 		Proposer:     &walletFromKeyStore.Address,
@@ -38,7 +32,7 @@ func main() {
 		RelIntensity: new(big.Int).SetInt64(100),
 	}
 
-	fmt.Println("Hash of the proposal", proposalWithoutSig.Hash())
+	//fmt.Println("Hash of the proposal", proposalWithoutSig.Hash())
 	parsedPriv, err := crypto.ToECDSA(walletFromKeyStore.PrivateKey)
 	if err != nil {
 		fmt.Println("Error parsing private key")
@@ -50,4 +44,6 @@ func main() {
 	}
 
 	fmt.Printf("%+v\n", *signedProposal)
+
+	fmt.Println(proposal.ValidateProposal(signedProposal))
 }
