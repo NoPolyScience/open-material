@@ -5,10 +5,18 @@ import (
 	"math/big"
 
 	"github.com/Open-Material/open-material/crypto"
+	"github.com/Open-Material/open-material/database"
 	"github.com/Open-Material/open-material/proposal"
 )
 
 func main() {
+	localdb := database.Database{}
+	localdb.View()
+	localdb.Write()
+	localdb.View()
+}
+
+func createNewWallet() {
 	wallet := crypto.NewWallet()
 	fmt.Println(*wallet)
 
@@ -18,6 +26,9 @@ func main() {
 		crypto.CreateKeyStoreDir()
 	}
 	crypto.CreateKeyStoreFile(wallet)
+}
+
+func signProposal() {
 	walletFromKeyStore, _ := crypto.ReadFromKeyStoreFile()
 	fmt.Println(*walletFromKeyStore)
 
