@@ -7,11 +7,14 @@ import (
 	"github.com/Open-Material/open-material/crypto"
 	"github.com/Open-Material/open-material/database"
 	"github.com/Open-Material/open-material/proposal"
+	"github.com/Open-Material/open-material/utils"
+
 	badger "github.com/dgraph-io/badger/v3"
 )
 
 func main() {
-	tryDatabase()
+	signProposal()
+	//tryDatabase()
 }
 
 func tryDatabase() {
@@ -54,6 +57,11 @@ func signProposal() {
 		DSpacing:     new(big.Int).SetInt64(19),
 		RelIntensity: new(big.Int).SetInt64(100),
 	}
+	rlp, err := utils.EncodeProposal(&proposalWithoutSig)
+	if err != nil {
+		fmt.Println("Error encoding RLP")
+	}
+	fmt.Println("RLP Encoded", rlp)
 
 	//fmt.Println("Hash of the proposal", proposalWithoutSig.Hash())
 	parsedPriv, err := crypto.ToECDSA(walletFromKeyStore.PrivateKey)
