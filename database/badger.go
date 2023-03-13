@@ -7,19 +7,15 @@ import (
 )
 
 type Database struct {
-	db *badger.DB
+	Db *badger.DB
 }
 
 func (d *Database) View() {
-	opts := badger.DefaultOptions("/tmp/badger")
-	opts = opts.WithLogger(nil)
-	db, err := badger.Open(opts)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
+	//opts := badger.DefaultOptions("/tmp/badger")
+	//opts = opts.WithLogger(nil)
+	//db, err := badger.Open(opts)
 
-	err = db.View(func(txn *badger.Txn) error {
+	err := d.Db.View(func(txn *badger.Txn) error {
 		item, err := txn.Get([]byte("key"))
 
 		if err != nil {
@@ -39,15 +35,11 @@ func (d *Database) View() {
 }
 
 func (d *Database) Write() {
-	opts := badger.DefaultOptions("/tmp/badger")
-	opts = opts.WithLogger(nil)
-	db, err := badger.Open(opts)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
-	txn := db.NewTransaction(true)
-	err = txn.SetEntry(badger.NewEntry([]byte("key"), []byte("value")))
+	//opts := badger.DefaultOptions("/tmp/badger")
+	//opts = opts.WithLogger(nil)
+	//db, err := badger.Open(opts)
+	txn := d.Db.NewTransaction(true)
+	err := txn.SetEntry(badger.NewEntry([]byte("key"), []byte("value")))
 
 	if err != nil {
 		panic(err)

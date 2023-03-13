@@ -7,10 +7,22 @@ import (
 	"github.com/Open-Material/open-material/crypto"
 	"github.com/Open-Material/open-material/database"
 	"github.com/Open-Material/open-material/proposal"
+	badger "github.com/dgraph-io/badger/v3"
 )
 
 func main() {
-	localdb := database.Database{}
+	tryDatabase()
+}
+
+func tryDatabase() {
+	opts := badger.DefaultOptions("/tmp/badger")
+	opts = opts.WithLogger(nil)
+	db, err := badger.Open(opts)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	localdb := database.Database{Db: db}
 	localdb.View()
 	localdb.Write()
 	localdb.View()
