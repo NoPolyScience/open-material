@@ -60,7 +60,9 @@ func handleDatabase(name []byte, proposal []byte) {
 	//localdb.View(name)
 	localdb.Write(name, proposal)
 
-	localdb.View(name)
+	value := localdb.View(name)
+	fmt.Println(value)
+	fmt.Println("Rlp decoded")
 }
 
 func createNewWallet() {
