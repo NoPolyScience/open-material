@@ -13,11 +13,41 @@ import (
 )
 
 func main() {
-	signProposal()
+	//signProposal()
 	//tryDatabase()
+	signAddDb()
 }
 
-func tryDatabase() {
+func signAddDb() {
+	walletKeyStore, _ := crypto.ReadFromKeyStoreFile()
+	proposalWithoutSig := proposal.Proposal{
+		Nonce:        1,
+		Proposer:     &walletKeyStore.Address,
+		Title:        "Test",
+		Pos:          new(big.Int).SetInt64(1),
+		Height:       new(big.Int).SetInt64(12),
+		FWHMLeft:     new(big.Int).SetInt64(35),
+		DSpacing:     new(big.Int).SetInt64(19),
+		RelIntensity: new(big.Int).SetInt64(100),
+	}
+
+	parsedPriv, err := crypto.ToECDSA(walletKeyStore.PrivateKey)
+	if err != nil {
+		fmt.Println("Error parsing private key")
+	}
+
+	signedProposal, err := proposal.SignProposal(&proposalWithoutSig, parsedPriv)
+	if err != nil {
+		fmt.Println("Error signing proposal")
+	}
+	rlpWithSig, _ := utils.EncodeProposalWithSig(signedProposal)
+
+	fmt.Println(rlpWithSig)
+	handleDatabase([]byte("Cu2S"), rlpWithSig)
+
+}
+
+func handleDatabase(name []byte, proposal []byte) {
 	opts := badger.DefaultOptions("/tmp/badger")
 	opts = opts.WithLogger(nil)
 	db, err := badger.Open(opts)
@@ -26,9 +56,11 @@ func tryDatabase() {
 	}
 	defer db.Close()
 	localdb := database.Database{Db: db}
-	localdb.View()
-	localdb.Write()
-	localdb.View()
+
+	//localdb.View(name)
+	localdb.Write(name, proposal)
+
+	localdb.View(name)
 }
 
 func createNewWallet() {

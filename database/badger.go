@@ -10,19 +10,20 @@ type Database struct {
 	Db *badger.DB
 }
 
-func (d *Database) View() {
+func (d *Database) View(key []byte) {
 	//opts := badger.DefaultOptions("/tmp/badger")
 	//opts = opts.WithLogger(nil)
 	//db, err := badger.Open(opts)
 
 	err := d.Db.View(func(txn *badger.Txn) error {
-		item, err := txn.Get([]byte("key"))
+		item, err := txn.Get(key)
 
 		if err != nil {
 			fmt.Println(err)
 			return nil
 		}
 		val, err := item.ValueCopy(nil)
+
 		if err != nil {
 			return err
 		}
@@ -34,12 +35,12 @@ func (d *Database) View() {
 	}
 }
 
-func (d *Database) Write() {
+func (d *Database) Write(key []byte, value []byte) {
 	//opts := badger.DefaultOptions("/tmp/badger")
 	//opts = opts.WithLogger(nil)
 	//db, err := badger.Open(opts)
 	txn := d.Db.NewTransaction(true)
-	err := txn.SetEntry(badger.NewEntry([]byte("key"), []byte("value")))
+	err := txn.SetEntry(badger.NewEntry(key, value))
 
 	if err != nil {
 		panic(err)
