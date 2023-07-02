@@ -28,5 +28,6 @@ require (
 
 require (
 	github.com/ethereum/go-ethereum v1.11.2
+	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/crypto v0.1.0 // indirect
 )

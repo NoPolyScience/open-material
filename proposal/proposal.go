@@ -21,6 +21,8 @@ type Proposal struct {
 	RelIntensity *big.Int        //-
 }
 
+type Proposals []*Proposals
+
 func (p *Proposal) Hash() common.Hash {
 	h := rlpHash(p)
 	return h
